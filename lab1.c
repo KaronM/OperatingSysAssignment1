@@ -20,18 +20,34 @@ char* readString(char* fileName){
 
     if(filePtr == NULL){
         perror("Error opening file");
+        return NULL;
     }
 
     char str[100];
 
-    char* word = fscanf(&filePtr, "%s", str);
-    
+    if (fscanf(filePtr, "%99s", str) != 1) {
+        fclose(filePtr);
+        return NULL;
+    }
+
     fclose(filePtr);
 
-    printf("%s",word);
-    return word;
-    free(str);
+    int length = 0;
+    while (str[length] != '\0') {
+        length++;
+    }
 
+
+    char* result = malloc(length + 1);
+    if (result == NULL) return NULL;
+
+  
+    for (int i = 0; i <= length; i++) {
+        result[i] = str[i];
+    }
+
+
+    return result;
 }
 
 /*
@@ -48,27 +64,23 @@ char* readString(char* fileName){
  *   mysteryExplosion(":)") --> "::)"
  * 
  */
-char* mysteryExplode(const char* str){
-    
-    if(sizeof(str)==sizeof(str[0])){
-            return str;
-    }
+char* mysteryExplode(const char* str){ if (str == NULL) return NULL;
 
-    int length = strlen(str);
+    int len = strlen(str);
+    int resultLen = (len * (len + 1)) / 2;
 
-    char* word_ptr;
+    char* result = malloc(resultLen + 1);
+    if (result == NULL) return NULL;
 
-    word_ptr = (char*)malloc(length * (length+1)/2 + 1);
+    int pos = 0;
 
-    int n = sizeof(str)/sizeof(str[0]);
-
-    for(int i = 0; i < n; i++){
-        int len = i;
-        for(int v = 0; v < i; v++){
-            strncat(word_ptr, str[v], sizeof(word_ptr)-sizeof(str[v])-1);
+    for (int i = 0; i < len; i++) {
+        for (int j = 0; j <= i; j++) {
+            result[pos++] = str[j];
         }
     }
-    
-    return word_ptr;
 
+    result[pos] = '\0';
+
+    return result;
 }

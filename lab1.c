@@ -10,8 +10,28 @@
  * fileName is c-string representing the file to read.
  * 
  */
+
+ 
+
+
 char* readString(char* fileName){
-    //TODO: Replace this line with your code
+    
+    FILE* filePtr = fopen(fileName,"r");
+
+    if(filePtr == NULL){
+        perror("Error opening file");
+    }
+
+    char str[100];
+
+    char* word = fscanf(&filePtr, "%s", str);
+    
+    fclose(filePtr);
+
+    printf("%s",word);
+    return word;
+    free(str);
+
 }
 
 /*
@@ -29,5 +49,26 @@ char* readString(char* fileName){
  * 
  */
 char* mysteryExplode(const char* str){
-    //TODO: Replace this line with your code
+    
+    if(sizeof(str)==sizeof(str[0])){
+            return str;
+    }
+
+    int length = strlen(str);
+
+    char* word_ptr;
+
+    word_ptr = (char*)malloc(length * (length+1)/2 + 1);
+
+    int n = sizeof(str)/sizeof(str[0]);
+
+    for(int i = 0; i < n; i++){
+        int len = i;
+        for(int v = 0; v < i; v++){
+            strncat(word_ptr, str[v], sizeof(word_ptr)-sizeof(str[v])-1);
+        }
+    }
+    
+    return word_ptr;
+
 }
